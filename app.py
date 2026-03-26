@@ -50,6 +50,34 @@ if ticker:
                 dati_stringa = f"Ticker: {ticker}, P/E: {info.get('trailingPE')}, Target: {info.get('targetMeanPrice')}"
                 risposta = chiedi_a_groq(f"Analizza brevemente questa azione come un esperto finanziario. Sii critico e diretto: {dati_stringa}")
                 st.info(risposta)
+        # --- BARRA LATERALE: SCELTA MERCATO E TICKER ---
+st.sidebar.header("Configurazione Mercato")
+
+# Menu a tendina per i mercati principali
+mercato = st.sidebar.selectbox(
+    "Seleziona Mercato",
+    ["USA (NASDAQ/NYSE)", "Italia (Borsa Italiana)", "Germania (XETRA)", "Cripto"]
+)
+
+# Gestione automatica del suffisso
+if mercato == "Italia (Borsa Italiana)":
+    suffisso = ".MI"
+    placeholder = "Es: ISP o ENI"
+elif mercato == "Germania (XETRA)":
+    suffisso = ".F"
+    placeholder = "Es: BMW"
+elif mercato == "Cripto":
+    suffisso = "-USD"
+    placeholder = "Es: BTC o ETH"
+else:
+    suffisso = ""
+    placeholder = "Es: AAPL o NVDA"
+
+# Input del ticker (senza dover scrivere il punto MI ogni volta)
+input_ticker = st.sidebar.text_input(f"Inserisci Simbolo {mercato}", "AAPL").upper()
+
+# Ticker finale pulito
+ticker = f"{input_ticker}{suffisso}"
 
     except Exception as e:
         st.error("Errore nel caricamento. Controlla il ticker o riprova tra poco.")
